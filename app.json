@@ -2,6 +2,7 @@
   "expo": {
     "name": "askme",
     "slug": "askme",
+    "scheme": "askme",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"

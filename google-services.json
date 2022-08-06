@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "724526857899",
+    "firebase_url": "https://letmeask-dfffa-default-rtdb.firebaseio.com",
+    "project_id": "letmeask-dfffa",
+    "storage_bucket": "letmeask-dfffa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:724526857899:android:c214c010f52c0d143441ee",
+        "android_client_info": {
+          "package_name": "host.exp.exponent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "724526857899-1anjbcc1441s6cason790194oi5qnl5o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAB9b3o6gsk1puy_KjJVmyH0bVgHJXySU4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "724526857899-1anjbcc1441s6cason790194oi5qnl5o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "724526857899-fs0991cpjgt8e3s35kpe5o2ji1b8h52o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
