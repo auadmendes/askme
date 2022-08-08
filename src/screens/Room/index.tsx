@@ -43,12 +43,12 @@ import { EvilIcons, Entypo } from '@expo/vector-icons';
 
 export function Room({ route }) {
   const [newQuestion, setNewQuestion] = useState('');
-
+  const [isLoading, setIsLoading] = useState(false);
   const { roomId } = route.params;
   const { user } = useAuth();
   const { handleCheckRoom, getRoom } = useRoom(roomId);
 
-  //const myAsyncStoragedRoom = '@askme:room';
+  const myAsyncStoragedRoom = '@askme:room';
   const navigation = useNavigation();
 
   const shareIcon = {
@@ -59,6 +59,7 @@ export function Room({ route }) {
   const { questions, title } = useRoom(roomId);
 
   async function handleQuestion() {
+
     if (newQuestion.trim() === '') {
       return;
     }
@@ -66,6 +67,7 @@ export function Room({ route }) {
       //throw new Error(toast.error('Nenhum usuário'));
     }
 
+    setIsLoading(true)
     const roomRef = ref(db, `rooms/${roomId}/questions`);
     const neoQuestion = await push(roomRef);
     set(neoQuestion, {
@@ -79,7 +81,7 @@ export function Room({ route }) {
     });
 
     setNewQuestion('');
-
+    setIsLoading(false);
   }
 
   async function handleShareRoom() {
@@ -151,7 +153,6 @@ export function Room({ route }) {
   }
 
 
-
   useEffect(() => {
     checkRoom()
   }, [])
@@ -168,19 +169,19 @@ export function Room({ route }) {
               <HStack
                 justifyContent="space-between"
                 alignItems="center"
-                borderWidth={1}
-                borderColor="tooltip.400"
+                //borderWidth={1}
+                //borderColor="tooltip.400"
                 p={1}
                 borderRadius={3}
               >
-                <Text fontFamily="body">{roomId}</Text>
+                {/* <Text fontFamily="body">{roomId}</Text> */}
                 <IconButton onPress={handleShareRoom}
                   icon={<Icon
                     as={Platform.OS === 'ios' ? EvilIcons : Entypo}
                     name={shareIcon.iconName}
                   />} borderRadius="full" _icon={{
-                    color: "danger.500",
-                    size: "lg"
+                    color: "tooltip.400",
+                    size: "2xl"
                   }} _hover={{
                     bg: "danger.600:alpha.20"
                   }} _pressed={{
@@ -235,12 +236,30 @@ export function Room({ route }) {
               />
               <HStack w="full" mt={3} justifyContent="space-between" alignItems="center">
                 <Logo height={20} />
-                <Button
-                  onPress={handleQuestion}
-                  title='Enviar pergunta'
-                  w={200}
-                  height={10}
-                />
+                <VStack>
+                  {!isLoading ? (
+                    <Button
+                      onPress={handleQuestion}
+                      title='Enviar pergunta'
+                      w={200}
+                      height={10}
+                    />
+                  ) :
+                    (
+                      <HStack
+                        alignItems="center"
+                        w={200}
+                        height={10}
+                      >
+                        <Spinner accessibilityLabel="Loading posts" color="attention.400" />
+                        <Heading color="attention.400" pl={3} fontSize="md">
+                          sending
+                        </Heading>
+                      </HStack>
+                    )
+                  }
+
+                </VStack>
               </HStack>
             </VStack>
 

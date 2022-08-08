@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { db } from '../services/firebase';
-import { getDatabase, ref, onValue, update, push, remove, off } from 'firebase/database';
+import { getDatabase, ref, onValue, off, query, orderByValue, orderByChild } from 'firebase/database';
 import { useAuth } from './auth';
 import { Alert } from 'react-native'
 
@@ -69,6 +69,16 @@ export function useRoom(roomId: string) {
 
   useEffect(() => {
     handleCheckRoom(roomId)
+
+    const questionsByLike = query(ref(db, 'rooms/' + roomId), orderByChild('likes'));
+
+
+    onValue(questionsByLike, (snapshot) => {
+      const q = snapshot.val()
+      //console.log('likes ' + JSON.stringify(q.questions))
+    })
+
+
     const roomRef = ref(db, `rooms/${roomId}`);
     onValue(roomRef, (snapshot) => {
       const databaseRoom = snapshot.val();
@@ -93,8 +103,8 @@ export function useRoom(roomId: string) {
 
     })
     return () => {
-      // roomRef
-      // off('');
+      roomRef
+      off(roomRef);
     }
   }, [roomId, user?.id])
 

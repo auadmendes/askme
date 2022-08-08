@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 
 import {
+  useToast,
   VStack,
   Heading,
   Box,
@@ -49,6 +50,8 @@ export function NewRoom() {
   const modalizerRef = useRef(null);
   //const { questions, title } = useRoom(user.id)
 
+  const toast = useToast();
+
   function handleLogOut() {
     signOut();
   }
@@ -58,6 +61,7 @@ export function NewRoom() {
   }
 
   async function handleCheckRoom() {
+    Keyboard.dismiss();
     try {
       if (!getRoomCode) {
         Alert.alert('Por favor, insira o código da sala')
@@ -66,10 +70,14 @@ export function NewRoom() {
 
       const roomRefKey = ref(db, `rooms/${getRoomCode}`)
       const keyRoom = get(roomRefKey)
-      console.log('Result Page New Room KEY..... ' + keyRoom)
 
       if (!(await keyRoom).exists()) {
-        handleOpenModal();
+        if (Platform.OS === 'android') {
+          toastForAndroid()
+        }
+        else {
+          handleOpenModal();
+        }
       } else {
         const roomRef = ref(db, `rooms/${getRoomCode}`)
 
@@ -88,6 +96,15 @@ export function NewRoom() {
           }
         });
 
+        const storageRoom = {
+          roomId: roomRef.key,
+          userId: user.id
+        }
+
+        await AsyncStorage.setItem(myAsyncStoragedRoom, JSON.stringify(storageRoom));
+        const roomStorageInfo = await AsyncStorage.getItem(myAsyncStoragedRoom)
+        console.log(roomStorageInfo + ' ... Sala')
+
       }
     } catch (error) {
       Alert.alert('Não encontramos esta sala. Ela pode não existir ou ter sido desativada! 🙁 ' + error)
@@ -97,6 +114,28 @@ export function NewRoom() {
 
   function handleOpenModal() {
     modalizerRef.current?.open();
+  }
+
+  function toastForAndroid() {
+    toast.show({
+      render: () => {
+        return (
+          <VStack
+            w="100%"
+            h={100}
+            borderRadius={6}
+            p={3}
+            bg="attention.400"
+          >
+            <Heading fontFamily="heading" color="white">Sorry</Heading>
+            <Text fontFamily="body" pt={3} color="white">
+              Não encontramos a sua sala, {'\n'} confira seu código
+            </Text>
+
+          </VStack>
+        )
+      }
+    });
   }
 
   return (

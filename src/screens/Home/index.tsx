@@ -85,7 +85,7 @@ export function Home() {
       setStorageRoomAsync(roomStoraged);
 
       //await console.log('Guardado ' + JSON.stringify(storageRoomAsync.roomId))
-      //console.log(roomStoraged.roomId)
+      console.log(roomStoraged.roomId)
 
 
       navigation.navigate('Room', {
@@ -93,13 +93,13 @@ export function Home() {
       });
 
     } else {
-      // Alert.alert('empty')
+      console.log(roomStorageInfo)
     }
 
   }
 
   useEffect(() => {
-    AsyncStorage.removeItem(myAsyncStoragedRoom)
+    //AsyncStorage.removeItem(myAsyncStoragedRoom)
     getStorageRoom();
   }, [])
 
