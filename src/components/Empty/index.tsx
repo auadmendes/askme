@@ -64,12 +64,12 @@ export function Empty() {
       <VStack h="80%" display="flex-start" justifyContent="space-between" alignItems="center">
 
         <Heading mb={4} color="muted.600" fontSize="lg" fontFamily="heading">
-          Desculpe!
+          Sorry!
         </Heading>
 
         <Text fontSize="xs" fontFamily="heading" color="muted.600" mt={2} mb={2}>
-          Nôs não encontramos a sua sala. {'\n'}
-          Ela pode não existir, ou ter sido desativada.
+          We could not find your room. {'\n'}
+          It cannot exist, or it can be deactivated.
         </Text>
         <QuestionImage />
       </VStack>

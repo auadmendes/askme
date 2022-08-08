@@ -107,11 +107,11 @@ export function Home() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <VStack alignContent="center" h="full" w="full" bg="background.200">
         <Box bg="primary.700">
-          <VStack alignItems="flex-end">
+          <VStack alignItems="flex-end" mr={2} mt={2}>
             <IconButton onPress={handleLogOut} mt={10} mr={2} icon={<Icon as={Feather} name="log-out" />}
               borderRadius="full" _icon={{
                 color: "background.50",
-                size: "md"
+                size: "lg"
               }} _hover={{
                 bg: "pink.600:alpha.20"
               }} _pressed={{
@@ -143,7 +143,7 @@ export function Home() {
             an answer
           </Heading >
           <HStack ml={5} mb={2} alignItems="center">
-            <Avatar source={{ uri: user.photo }} />
+            <Avatar source={{ uri: user.photo }} borderWidth={1} borderColor="tooltip.400" />
             <Text ml={3} color="background.50" fontFamily="heading">{user.name}</Text>
           </HStack>
 

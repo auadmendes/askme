@@ -3,6 +3,7 @@ import { useAuth } from '../../hooks/auth';
 import { db } from '../../services/firebase';
 
 import { Alert } from 'react-native';
+import { useToast } from 'native-base';
 
 import {
   ref,
@@ -52,7 +53,9 @@ export function Question({ data, roomKey, likeId, likeCount }: Props) {
   const [author, setAuthor] = useState(false);
   const roomId = data.id;
   // const { myRoomId } = useRoom(data);
-  const userRoomKey = data.author.name
+  const userRoomKey = data.author.name;
+
+  const toast = useToast();
 
   async function checkRoomId() {
 
@@ -112,25 +115,30 @@ export function Question({ data, roomKey, likeId, likeCount }: Props) {
   async function handleDeleteQuestion(questionId: string) {
 
     Alert.alert(
-      "Deletar pergunta.",
-      "Você tem certeza que quer deletar esta pergunta?",
+      "Alert 🚨.",
+      "Are you sure you want to delete this question?",
       [
         {
           text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
+          onPress: () => { },
           style: "cancel"
         },
         {
           text: "OK", onPress: () => {
             const question = ref(db, `rooms/${roomKey}/questions/${questionId}/`);
             remove(question);
+            handleCallToast();
           }
         }
       ]
     );
 
-    // const question = ref(db, `rooms/${roomKey}/questions/${questionId}/`);
-    // remove(question);
+  }
+
+  function handleCallToast() {
+    toast.show({
+      description: "Question successful deleted!"
+    })
   }
 
   useEffect(() => {

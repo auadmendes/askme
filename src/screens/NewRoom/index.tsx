@@ -124,12 +124,16 @@ export function NewRoom() {
             w="100%"
             h={100}
             borderRadius={6}
-            p={3}
+            pb={30}
+            pl={5}
+            pr={5}
+            pt={2}
             bg="attention.400"
+
           >
             <Heading fontFamily="heading" color="white">Sorry</Heading>
-            <Text fontFamily="body" pt={3} color="white">
-              Não encontramos a sua sala, {'\n'} confira seu código
+            <Text fontFamily="body" color="white">
+              Não encontramos a sua sala, {'\n'} confira seu código {'\n'}
             </Text>
 
           </VStack>

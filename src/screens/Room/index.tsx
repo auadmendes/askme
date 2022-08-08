@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 import { db } from '../../services/firebase';
-import { ref, onValue, set, push } from 'firebase/database';
+import { ref, set, push } from 'firebase/database';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -14,6 +14,7 @@ import {
   Alert,
   Share,
   Keyboard,
+  TouchableWithoutFeedback,
   FlatList,
   Platform
 } from 'react-native';
@@ -37,7 +38,8 @@ import { Button } from '../../components/Button';
 import { Empty } from '../../components/Empty';
 import { Question } from '../../components/Question';
 
-import { EvilIcons, Entypo } from '@expo/vector-icons';
+import { EvilIcons, Entypo, Feather } from '@expo/vector-icons';
+
 
 
 
@@ -82,6 +84,7 @@ export function Room({ route }) {
 
     setNewQuestion('');
     setIsLoading(false);
+    Keyboard.dismiss();
   }
 
   async function handleShareRoom() {
@@ -153,6 +156,8 @@ export function Room({ route }) {
   }
 
 
+
+
   useEffect(() => {
     checkRoom()
   }, [])
@@ -163,7 +168,6 @@ export function Room({ route }) {
         <StatusBar barStyle='dark-content' translucent />
         {getRoom === null ? <Empty /> :
           <VStack flex={1} safeArea>
-
             <HStack justifyContent="space-between" alignItems="center" pl={3} pr={3}>
               <Logo height={50} />
               <HStack
@@ -209,16 +213,34 @@ export function Room({ route }) {
                     {getRoom.title}
                   </Heading>
                   <Box ml={5} p={1} pl={2} pr={2} bg="tooltip.400" borderRadius={40}>
-                    <Text color="white">{questions.length} perguntas</Text>
+                    <Text color="white">{questions.length} questions</Text>
                   </Box>
                 </HStack>
-                <Button
-                  onPress={handleLeaveRoom}
-                  bg="alert.600"
-                  width={100}
-                  height={7}
-                  title='Sair da sala'
-                />
+                <IconButton onPress={handleLeaveRoom}
+                  mr={1.5}
+                  icon={<Icon
+                    as={Feather}
+                    name="log-out"
+                  />} borderRadius="full" _icon={{
+                    color: "gray.500",
+                    size: "sm"
+                  }} _hover={{
+                    bg: "danger.600:alpha.20"
+                  }} _pressed={{
+                    bg: "danger.600:alpha.20",
+                    _icon: {
+                      name: "emoji-flirt"
+                    },
+                    _ios: {
+                      _icon: {
+                        size: "2xl"
+                      }
+                    }
+                  }} _ios={{
+                    _icon: {
+                      size: "2xl"
+                    }
+                  }} />
               </HStack>
             </VStack>
 
@@ -240,7 +262,7 @@ export function Room({ route }) {
                   {!isLoading ? (
                     <Button
                       onPress={handleQuestion}
-                      title='Enviar pergunta'
+                      title='Send question'
                       w={200}
                       height={10}
                     />

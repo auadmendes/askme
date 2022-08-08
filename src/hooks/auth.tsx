@@ -10,6 +10,8 @@ const { CLIENT_ID } = process.env;
 const { REDIRECT_URI } = process.env;
 
 import * as AuthSession from 'expo-auth-session';
+import * as AppleAuthentication from 'expo-apple-authentication';
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AuthProviderProps {
@@ -26,7 +28,7 @@ interface User {
 interface IAuthContextData {
   user: User;
   signWithGoogle(): Promise<void>;
-  //signInWithApple(): Promise<void>;
+  signInWithApple(): Promise<void>;
   signOut(): Promise<void>;
   userStorageLoading: boolean;
 }
@@ -38,7 +40,6 @@ interface AuthorizationResponse {
   type: string;
 }
 
-
 const AuthContext = createContext({} as IAuthContextData);
 
 
@@ -46,6 +47,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   const [userStorageLoading, setUserStorageLoading] = useState(true);
   const [user, setUser] = useState<User>({} as User)
   const userAsyncStorage = '@askme:user';
+  const userAppleAsyncStorage = '@askme:userApple';
 
   async function signWithGoogle() {
     try {
@@ -81,10 +83,51 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function signInWithApple() {
+    const userStoraged = await AsyncStorage.getItem(userAppleAsyncStorage)
+    if (userStoraged) {
+
+
+      const userLogged = JSON.parse(userStoraged) as User;
+      setUser(userLogged);
+
+      await AsyncStorage.setItem(userAsyncStorage, JSON.stringify(userLogged));
+
+    } else {
+      try {
+        const credential = await AppleAuthentication.signInAsync({
+          requestedScopes: [
+            AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+            AppleAuthentication.AppleAuthenticationScope.EMAIL,
+          ]
+        });
+
+        if (credential) {
+          const name = credential.fullName?.givenName!
+          const photo = `https://ui-avatars.com/api/?name=${name}&length=1`
+          const userLogged = {
+            id: credential.user,
+            name,
+            email: credential.email,
+            photo
+          }
+          setUser(userLogged);
+          console.log(userLogged + 'Primeira vez')
+          await AsyncStorage.setItem(userAsyncStorage, JSON.stringify(userLogged));
+          await AsyncStorage.setItem(userAppleAsyncStorage, JSON.stringify(userLogged));
+        }
+
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
+  }
+
   async function signOut() {
     setUser({} as User);
     await AsyncStorage.removeItem(userAsyncStorage);
   }
+
   useEffect(() => {
     async function loadUserStoragedData() {
       const userStoraged = await AsyncStorage.getItem(userAsyncStorage)
@@ -103,6 +146,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       user,
       userStorageLoading,
       signWithGoogle,
+      signInWithApple,
       signOut,
     }}
     >
