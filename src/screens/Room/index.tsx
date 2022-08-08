@@ -157,7 +157,6 @@ export function Room({ route }) {
 
 
 
-
   useEffect(() => {
     checkRoom()
   }, [])
